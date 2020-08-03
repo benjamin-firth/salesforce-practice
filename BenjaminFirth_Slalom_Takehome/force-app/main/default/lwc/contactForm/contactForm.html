@@ -1,0 +1,17 @@
+<template>
+  <lightning-card title="Contact Information" icon-name="custom:custom14">
+    <div class="slds-m-around_medium">
+      <template if:true={contacts}>
+        <lightning-datatable 
+          data={contacts.data} 
+          columns={columns} 
+          key-field="Id"
+          hide-checkbox-column=”true”>
+          <!-- sorted-by={sortBy} -->
+          <!-- sorted-direction={sortDirection} -->
+          <!-- onsort={handleSort} -->
+        </lightning-datatable>
+      </template>
+    </div>
+  </lightning-card>    
+</template>
