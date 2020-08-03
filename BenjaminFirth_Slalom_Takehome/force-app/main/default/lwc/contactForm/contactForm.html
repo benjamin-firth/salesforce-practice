@@ -1,17 +1,59 @@
 <template>
   <lightning-card title="Contact Information" icon-name="custom:custom14">
     <div class="slds-m-around_medium">
-      <template if:true={contacts}>
-        <lightning-datatable 
-          data={contacts.data} 
-          columns={columns} 
-          key-field="Id"
-          hide-checkbox-column=”true”>
-          <!-- sorted-by={sortBy} -->
-          <!-- sorted-direction={sortDirection} -->
-          <!-- onsort={handleSort} -->
-        </lightning-datatable>
-      </template>
+      <lightning-datatable 
+        data={data} 
+        columns={columns} 
+        key-field="Id"
+        hide-checkbox-column=”true”
+        sorted-by={sortedBy} 
+        sorted-direction={sortedDirection} 
+        onsort={sortColumns}>
+      </lightning-datatable>
     </div>
+  </lightning-card>
+  <lightning-card title="Add New Contact" icon-name="custom:custom14">
+    <lightning-record-edit-form object-api-name="Contact">
+      <div class="slds-m-around_medium row">
+        <lightning-input-field 
+          type="text" 
+          label="First Name" 
+          field-name="FirstName" 
+          placeholder="First Name" 
+          maxlength="15">
+        </lightning-input-field>
+        <lightning-input-field 
+          type="text" 
+          label="last Name" 
+          field-name="LastName" 
+          placeholder="Last Name" 
+          maxlength="15" 
+          required>
+        </lightning-input-field>
+        <lightning-input-field 
+          type="text" 
+          label="Title" 
+          field-name="Title" 
+          placeholder="Title" 
+          maxlength="15">
+        </lightning-input-field> 
+        <lightning-input-field 
+          type="phone" 
+          label="Phone" 
+          field-name="Phone" 
+          placeholder="Phone" 
+          maxlength="13">
+        </lightning-input-field> 
+        <lightning-input-field 
+          type="email" 
+          label="Email" 
+          field-name="Email" 
+          placeholder="Email" 
+          maxlength="35" 
+          required>
+        </lightning-input-field> 
+        <lightning-button class="slds-button slds-button_brand big-button" label="Submit Contact" type="submit" title="Add Row">Submit Contact</lightning-button>
+      </div>
+    </lightning-record-edit-form>
   </lightning-card>    
 </template>
