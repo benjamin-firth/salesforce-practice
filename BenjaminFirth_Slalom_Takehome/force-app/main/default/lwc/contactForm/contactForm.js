@@ -34,7 +34,34 @@ export default class ContactForm extends LightningElement {
 
   // It seems like this functionality could be done in either JS or Apex. 
   // Is there a reason you might choose one over the other?
-  
+
+  onSubmitHandler(e) {
+    e.preventDefault();
+    const fields = e.detail.fields;
+    const fullName = `${fields.FirstName} ${fields.LastName}`;
+    let errorBool = false;
+    
+    this.data.map(contact => {
+      if (contact.Name === fullName) {
+        errorBool = true;
+      }
+      return errorBool;
+    });
+    
+    if (!errorBool) {
+      this.template.querySelector('lightning-record-edit-form').submit(fields);
+    } else {
+      const event = new ShowToastEvent({
+        title: 'Toast Warning',
+        message: 'Contact already exists!',
+        variant: 'warning',
+        mode: 'dismissable'
+      });
+
+      this.dispatchEvent(event);
+    }
+  }
+
   handleSuccess() {
     const event = new ShowToastEvent({
       title: 'Record Update',
