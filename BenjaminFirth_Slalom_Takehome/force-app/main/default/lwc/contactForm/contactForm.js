@@ -1,5 +1,6 @@
 import { LightningElement, wire, api, track } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getContactList from '@salesforce/apex/ContactController.getContactList';
 
 export default class ContactForm extends LightningElement {
@@ -25,12 +26,30 @@ export default class ContactForm extends LightningElement {
     }
   }
 
-  sortColumns( event ) {
-    this.sortedBy = event.detail.fieldName;
-    this.sortedDirection = event.detail.sortDirection;
+  sortColumns(e) {
+    this.sortedBy = e.detail.fieldName;
+    this.sortedDirection = e.detail.sortDirection;
     return refreshApex(this.result);
   }
 
   // It seems like this functionality could be done in either JS or Apex. 
   // Is there a reason you might choose one over the other?
+  
+  handleSuccess() {
+    const event = new ShowToastEvent({
+      title: 'Record Update',
+      message: 'Contact has been added!',
+      variant: 'success',
+      mode: 'dismissable'
+    });
+    const inputFields = this.template.querySelectorAll(
+      'lightning-input-field'
+    );
+
+    this.dispatchEvent(event);
+
+    if (inputFields) {
+      inputFields.forEach(field => field.reset());
+    }
+  }
 }

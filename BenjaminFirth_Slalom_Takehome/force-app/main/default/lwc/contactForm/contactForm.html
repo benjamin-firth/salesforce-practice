@@ -1,7 +1,10 @@
 <template>
-  <lightning-card title="Contact Information" icon-name="custom:custom14">
-    <div class="slds-m-around_medium">
+  <lightning-card 
+    title="Contact Information" 
+    icon-name="custom:custom14">
+    <div class="slds-m-around_medium datatable-scroll">
       <lightning-datatable 
+        class="slds-scrollable_y"
         data={data} 
         columns={columns} 
         key-field="Id"
@@ -12,9 +15,14 @@
       </lightning-datatable>
     </div>
   </lightning-card>
-  <lightning-card title="Add New Contact" icon-name="custom:custom14">
-    <lightning-record-edit-form object-api-name="Contact">
+  <lightning-card 
+    title="Add New Contact" 
+    icon-name="custom:custom14">
+    <lightning-record-edit-form 
+      onsuccess={handleSuccess}
+      object-api-name="Contact">
       <div class="slds-m-around_medium row">
+        <lightning-messages></lightning-messages>
         <lightning-input-field 
           type="text" 
           label="First Name" 
@@ -52,8 +60,17 @@
           maxlength="35" 
           required>
         </lightning-input-field> 
-        <lightning-button class="slds-button slds-button_brand big-button" label="Submit Contact" type="submit" title="Add Row">Submit Contact</lightning-button>
+        <lightning-button 
+          class="slds-button big-button" 
+          label="Submit Contact" 
+          type="submit" 
+          title="Add Row">Submit Contact
+        </lightning-button>
       </div>
     </lightning-record-edit-form>
   </lightning-card>    
 </template>
+
+<!-- The lightning-record-edit-form is AWESOME! 
+It implements the LIghtning Data Service and through that can update the Contacts
+directly instead of needing Apex or JS.-->

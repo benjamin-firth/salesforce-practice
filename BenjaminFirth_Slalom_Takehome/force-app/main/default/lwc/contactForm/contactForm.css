@@ -1,4 +1,8 @@
 .big-button {
   height: 38px;
-  margin-left: 5px;
+  margin-left: 3px;
+}
+
+.datatable-scroll {
+  height: 150px;
 }
