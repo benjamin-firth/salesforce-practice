@@ -78,5 +78,8 @@ export default class ContactForm extends LightningElement {
     if (inputFields) {
       inputFields.forEach(field => field.reset());
     }
+    
+    return refreshApex(this.result);
+    // THis last bit refreshes the results displayed on the lightning-datatable.
   }
 }
