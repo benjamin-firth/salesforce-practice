@@ -80,6 +80,6 @@ export default class ContactForm extends LightningElement {
     }
     
     return refreshApex(this.result);
-    // This last bit refreshes the results displayed on the lightning-datatable.
+    // This last bit refreshes the results displayed on the lightning-datatable. I do have questions about whether this is best practice, or if there is a more elegant solution.
   }
 }
