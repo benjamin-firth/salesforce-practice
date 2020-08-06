@@ -80,6 +80,6 @@ export default class ContactForm extends LightningElement {
     }
     
     return refreshApex(this.result);
-    // THis last bit refreshes the results displayed on the lightning-datatable.
+    // This last bit refreshes the results displayed on the lightning-datatable.
   }
 }
