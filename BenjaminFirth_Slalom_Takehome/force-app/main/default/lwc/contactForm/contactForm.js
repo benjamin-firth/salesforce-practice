@@ -52,7 +52,7 @@ export default class ContactForm extends LightningElement {
       this.template.querySelector('lightning-record-edit-form').submit(fields);
     } else {
       const event = new ShowToastEvent({
-        title: 'Toast Warning',
+        title: 'Duplicate Warning',
         message: 'Contact already exists!',
         variant: 'warning',
         mode: 'dismissable'
