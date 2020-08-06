@@ -2,7 +2,7 @@ public with sharing class ContactController {
     @AuraEnabled(cacheable=true)
     public static List<Contact> getContactList( String sortBy, String sortDirection ) {
         String query = 'SELECT Name,Title,Phone,Email FROM Contact WHERE (accountId=null) ';
-        system.debug('!!!' + sortBy + ' ' + sortDirection);
+        
         if ( sortBy != null && sortDirection != null ) {
             query += ' ORDER BY ' + sortBy + ' ' + sortDirection;
         }
