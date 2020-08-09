@@ -6,19 +6,8 @@ import getContactList from '@salesforce/apex/ContactController.getContactList';
 export default class ContactForm extends LightningElement {
   @track error;
   @track data = [];
-
-  // @api, @track, and @wire are all LWC decorators.
-
-  // I understand @track to be similar to state in Javascript, 
-  // except that the variables are then accessible in the html. 
-  // Like state, @track fields are reactive.  This means if 
-  // the field changes, the component will rerender.
-  
   @api sortedDirection = 'asc';
   @api sortedBy = 'Name';
-
-  // @api exposes public methods or properties on an apex class.
-
   result;
   @track columns = [
     { label: 'Name', fieldName: 'Name' },
@@ -27,12 +16,10 @@ export default class ContactForm extends LightningElement {
     { label: 'Email', fieldName: 'Email', type: 'email' },
   ];
 
-  // These columns specify the shape and fields of the lightning
-  // data table.
-
   @wire(getContactList, {sortBy: '$sortedBy', sortDirection: '$sortedDirection' })
   contactCheck(result) {
     this.result = result;
+
     if (result.data) {
       this.data = result.data;
     } else if (result.error) {
@@ -40,47 +27,28 @@ export default class ContactForm extends LightningElement {
     }
   }
 
-  // LWC's use @wire to access Salesforce data. Wire adapters take
-  // in an adapterId and adapterConfig.The id is the identifier
-  // of the specific wire adapter that it's getting info from, in
-  // this case the getContactList.  The Config argument being passed
-  // in is an object specific to the wire adapter.  
-  // Finally, contactCheck is a function that receives the data 
-  // stream from the @wire service.  This essentially functions as
-  // a catch statement.
-
   sortColumns(e) {
-    this.sortedBy = e.detail.fieldName;
-    this.sortedDirection = e.detail.sortDirection;
+    const { fieldName, sortDirection } = e.detail;
+    this.sortedBy = fieldName;
+    this.sortedDirection = sortDirection;
     return refreshApex(this.result);
   }
-
-  // This bit refreshes the results displayed on the lightning-datatable with the sorted data. 
-  
-  // I do have questions about whether this is best practice, or if there is a more elegant solution.
-
-  // It seems like this functionality could be done in either JS or Apex. 
-
-  // Is there a reason you might choose one over the other?
 
   onSubmitHandler(e) {
     e.preventDefault();
     const fields = e.detail.fields;
     const fullName = `${fields.FirstName} ${fields.LastName}`;
-    let errorBool = false;
+    let hasError = false;
     
     this.data.map(contact => {
       if (contact.Name === fullName) {
-        errorBool = true;
+        hasError = true;
       }
-      return errorBool;
-    });
 
-    // This logic is here to check if a name already exists in the
-    // data table.  If so, errorBool will be true and the duplicate
-    // toast message will fire.
+      return hasError;
+    });
     
-    if (!errorBool) {
+    if (!hasError) {
       this.template.querySelector('lightning-record-edit-form').submit(fields);
     } else {
       const event = new ShowToastEvent({
@@ -90,15 +58,7 @@ export default class ContactForm extends LightningElement {
         mode: 'dismissable'
       });
 
-      // LWC's can display toast messages / notifications.  These
-      // must be imported from the 'lightning/platformShowToastEvent'
-      // module. They can be dispatched from events.
-
       this.dispatchEvent(event);
-
-      // dispatchEvent is here because the onSubmit "stops" the 
-      // event while you execute the function's logic, so it must
-      // be re-dispatched.
     }
   }
 
@@ -115,19 +75,52 @@ export default class ContactForm extends LightningElement {
 
     this.dispatchEvent(event);
 
-    // Again, dispatchEvent is here because the onSubmit "stops" the 
-    // event while you execute the function's logic, so it must
-    // be re-dispatched.
-
     if (inputFields) {
       inputFields.forEach(field => field.reset());
     }
 
-    // This conditional resets the fields for better User Experience.
-    
     return refreshApex(this.result);
-
-    // This last bit refreshes the results displayed on the lightning-datatable. 
-    // I do have questions about whether this is best practice, or if there is a more elegant solution.
   }
 }
+
+// ASSIGNMENT NOTES:
+
+// @api, @track, and @wire are all LWC decorators.
+
+// I understand @track to be similar to state in Javascript, 
+// except that the variables are then accessible in the html. 
+// Like state, @track fields are reactive.  This means if 
+// the field changes, the component will rerender.
+
+// @api exposes public methods or properties on an apex class.
+
+// LWC's use @wire to access Salesforce data. Wire adapters take
+// in an adapterId and adapterConfig.  The id is the identifier
+// of the specific wire adapter that it's getting info from, in
+// this case the getContactList.  The Config argument being passed
+// in is an object specific to the wire adapter.  
+// Finally, contactCheck is a function that receives the data 
+// stream from the @wire service.  This essentially functions as
+// a catch statement.
+
+// The sortColumns method refreshes the results displayed on the 
+// lightning-datatable with the sorted data. 
+// I do have questions about whether this is best practice, or if there is a 
+// more elegant solution.
+// It seems like this functionality could be done in either JS or Apex. 
+// Is there a reason you might choose one over the other?
+
+// This onSubmitHandler logic is here to check if a name already exists in the
+// data table.  If so, errorBool will be true and the duplicate toast message 
+// will fire.
+
+// LWC's can display toast messages / notifications.  These must be imported 
+// from the 'lightning/platformShowToastEvent' module. They can be dispatched 
+// from events.
+
+// dispatchEvent is here because the onSubmit "stops" the event while you 
+// execute the function's logic, so it must be re-dispatched.
+
+// This last refreshApex bit refreshes the results displayed on the
+// lightning-datatable. I do have questions about whether this is best practice, 
+// or if there is a more elegant solution.
